@@ -15,7 +15,7 @@
       "options": {
         "a": "Réduire les émissions de 20 %",
         "b": "Limiter les ventes de diesel",
-        "c": "Atteindre le zéro émission",
+        **"c": "Atteindre le zéro émission"**, 
         "d": "Supprimer les hybrides"
       },
       "answer": "c"
@@ -26,7 +26,7 @@
         "a": "Industrie",
         "b": "Énergie",
         "c": "Agriculture",
-        "d": "Transport routier"
+        **"d": "Transport routier"**
       },
       "answer": "d"
     },
@@ -34,7 +34,7 @@
       "question": "Quel cycle d’essai mesure les émissions officielles de CO₂ ?",
       "options": {
         "a": "NEDC",
-        "b": "WLTP",
+        **"b": "WLTP"**,
         "c": "EPA",
         "d": "FTP75"
       },
@@ -45,10 +45,60 @@
       "options": {
         "a": "20 € par g/km",
         "b": "50 € par g/km",
-        "c": "95 € par g/km et par véhicule",
+        **"c": "95 € par g/km et par véhicule"**, 
         "d": "150 € par g/km"
       },
       "answer": "c"
+    },
+    {
+      "question": "Quel est l’objectif de l’Accord de Paris ?",
+      "options": {
+        **"a": "Limiter le réchauffement à +1,5 °C"**, 
+        "b": "Réduire uniquement les émissions industrielles",
+        "c": "Interdire les véhicules thermiques",
+        "d": "Favoriser le transport public"
+      },
+      "answer": "a"
+    },
+    {
+      "question": "Quel gaz a un pouvoir réchauffant 25 fois supérieur au CO₂ ?",
+      "options": {
+        "a": "Ozone",
+        **"b": "Méthane"**, 
+        "c": "Hélium",
+        "d": "Hydrogène"
+      },
+      "answer": "b"
+    },
+    {
+      "question": "Quelle solution est identifiée comme clé pour réduire les émissions à l’usage ?",
+      "options": {
+        "a": "Carburants plombés",
+        **"b": "Électrification"**, 
+        "c": "Augmentation de la cylindrée",
+        "d": "Conduite à haute vitesse"
+      },
+      "answer": "b"
+    },
+    {
+      "question": "Quel pourcentage des GES en Europe provient du transport routier ?",
+      "options": {
+        "a": "5 %",
+        "b": "10 %",
+        **"c": "20 %"**, 
+        "d": "40 %"
+      },
+      "answer": "c"
+    },
+    {
+      "question": "Quel organisme européen collecte les données officielles CO₂ ?",
+      "options": {
+        "a": "OMS",
+        **"b": "Agence Européenne pour l’Environnement (EEA)"**, 
+        "c": "ONU Carbone",
+        "d": "Commission Automobile Européenne"
+      },
+      "answer": "b"
     }
   ]
 }
