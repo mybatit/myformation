@@ -1,0 +1,24 @@
+{
+  "questions": [
+    {
+      "question": "Quel gaz représente plus de 95 % des émissions des véhicules ?",
+      "options": {
+        "a": "Méthane",
+        "b": "Ozone",
+        "c": "CO₂",
+        "d": "Protoxyde d’azote"
+      },
+      "answer": "c"
+    },
+    {
+      "question": "Quel est l’objectif de l’Union européenne pour les véhicules neufs en 2035 ?",
+      "options": {
+        "a": "Réduire les émissions de 20 %",
+        "b": "Limiter les ventes de diesel",
+        "c": "Atteindre le zéro émission",
+        "d": "Supprimer les hybrides"
+      },
+      "answer": "c"
+    }
+  ]
+}
