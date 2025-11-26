@@ -1,13 +1,9 @@
 <!doctype html>
 <html lang="fr">
 <head>
-
-
-
-  
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Quizzzzz dynamique depuis GitHub</title>
+  <title>Quiz dynamique depuis GitHub</title>
 
   <style>
     :root{--bg:#f6f7fb;--card:#fff;--accent:#2b6df6;--ok:#16a34a;--bad:#ef4444}
@@ -33,7 +29,7 @@
 <body>
   <div class="container">
     <header>
-      <h1>Quiz chargézz automatiquement depuis GitHub</h1>
+      <h1>Quiz chargé automatiquement depuis GitHub</h1>
       <div class="small">Le JSON est chargé depuis un fichier GitHub public.</div>
     </header>
 
@@ -57,9 +53,9 @@
     const feedback = document.getElementById("feedback");
     const resultArea = document.getElementById("resultArea");
 
-    // ---- Load JSON from GitHub ----
+    // ---- Load JSON from YOUR GitHub ----
     const GITHUB_JSON_URL =
-      "https://raw.githubusercontent.com/mybatit/myquiz/e8d153403dbe63da1b9f966e4a1f6412dcb8d450/q1";
+      "https://raw.githubusercontent.com/mybatit/myformation/refs/heads/dev/q1";
 
     fetch(GITHUB_JSON_URL)
       .then(response => response.json())
