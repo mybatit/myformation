@@ -19,6 +19,36 @@
         "d": "Supprimer les hybrides"
       },
       "answer": "c"
+    },
+    {
+      "question": "Quel secteur a vu ses émissions augmenter depuis 1990 ?",
+      "options": {
+        "a": "Industrie",
+        "b": "Énergie",
+        "c": "Agriculture",
+        "d": "Transport routier"
+      },
+      "answer": "d"
+    },
+    {
+      "question": "Quel cycle d’essai mesure les émissions officielles de CO₂ ?",
+      "options": {
+        "a": "NEDC",
+        "b": "WLTP",
+        "c": "EPA",
+        "d": "FTP75"
+      },
+      "answer": "b"
+    },
+    {
+      "question": "Quelle est la sanction en cas de dépassement de l’objectif CO₂ ?",
+      "options": {
+        "a": "20 € par g/km",
+        "b": "50 € par g/km",
+        "c": "95 € par g/km et par véhicule",
+        "d": "150 € par g/km"
+      },
+      "answer": "c"
     }
   ]
 }
