@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Quiz dynamique</title>
+  <title>Quiz dynamique depuis GitHub</title>
 
   <style>
     :root{--bg:#f6f7fb;--card:#fff;--accent:#2b6df6;--ok:#16a34a;--bad:#ef4444}
@@ -29,8 +29,8 @@
 <body>
   <div class="container">
     <header>
-      <h1>Quiz dynamique</h1>
-      <div class="small">Choisissez une réponse par question puis cliquez sur <strong>Vérifier</strong>.</div>
+      <h1>Quiz chargé automatiquement depuis GitHub</h1>
+      <div class="small">Le JSON est chargé depuis un fichier GitHub public.</div>
     </header>
 
     <main class="card">
@@ -44,104 +44,86 @@
 
       <div id="resultArea"></div>
     </main>
-
-    <p class="small" style="margin-top:12px">
-      Pour modifier les questions, éditez simplement le fichier JSON.
-    </p>
-
-    <textarea id="jsonInput" placeholder="Collez ici votre JSON..." style="width:100%;height:180px;margin-top:20px;padding:10px;border-radius:8px;border:1px solid #ccc;font-family:monospace;font-size:14px"></textarea>
-    <button id="loadJsonBtn" style="margin-top:10px">Charger le JSON</button>
-
   </div>
 
   <script>
-    const quizForm = document.getElementById('quizForm');
-    const checkBtn = document.getElementById('checkBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const jsonInput = document.getElementById('jsonInput');
-    const loadJsonBtn = document.getElementById('loadJsonBtn');
-    const feedback = document.getElementById('feedback');
-    const resultArea = document.getElementById('resultArea');
+    const quizForm = document.getElementById("quizForm");
+    const checkBtn = document.getElementById("checkBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const feedback = document.getElementById("feedback");
+    const resultArea = document.getElementById("resultArea");
 
-    // --------- LOAD JSON AND RENDER QUIZ ----------
-    loadJsonBtn.addEventListener('click', () => {
-      let data;
-      try {
-        data = JSON.parse(jsonInput.value);
-      } catch (e) {
-        alert('JSON invalide');
-        return;
-      }
+    // ---- Load JSON from GitHub ----
+    const GITHUB_JSON_URL =
+      "https://raw.githubusercontent.com/mybatit/myquiz/e8d153403dbe63da1b9f966e4a1f6412dcb8d450/q1";
 
-      quizForm.innerHTML = '';
-      resultArea.innerHTML = '';
-      feedback.textContent = '';
+    fetch(GITHUB_JSON_URL)
+      .then(response => response.json())
+      .then(data => renderQuiz(data.questions))
+      .catch(err => alert("Erreur : impossible de charger le JSON depuis GitHub."));
 
-      data.questions.forEach((q, idx) => {
-        const div = document.createElement('div');
-        div.className = 'question';
+    // ---- Render quiz ----
+    function renderQuiz(questions) {
+      quizForm.innerHTML = "";
+
+      questions.forEach((q, index) => {
+        const div = document.createElement("div");
+        div.className = "question";
         div.dataset.answer = q.answer;
 
         div.innerHTML = `
-          <div class="q-title">${idx+1}) ${q.question}</div>
-          ${Object.entries(q.options).map(([key, value]) =>
-            `<label><input type="radio" name="q${idx+1}" value="${key}"> ${value}</label>`
-          ).join("")}
+          <div class="q-title">${index+1}) ${q.question}</div>
+          ${Object.entries(q.options)
+            .map(([key, value]) => 
+              `<label><input type="radio" name="q${index+1}" value="${key}"> ${value}</label>`
+            ).join("")}
         `;
 
         quizForm.appendChild(div);
       });
-    });
+    }
 
-    // --------- GRADE QUIZ ----------
+    // ---- Grade quiz ----
     function grade() {
-      const questions = Array.from(document.querySelectorAll('.question'));
+      const questions = Array.from(document.querySelectorAll(".question"));
       let score = 0;
       let total = questions.length;
 
       questions.forEach((q, idx) => {
         const correct = q.dataset.answer;
-        const name = 'q' + (idx+1);
-        const selected = quizForm[name]?.value || null;
+        const selected = quizForm["q" + (idx+1)]?.value || null;
 
-        q.classList.remove('correct','incorrect');
+        q.classList.remove("correct", "incorrect");
 
-        if (!selected) q.classList.add('incorrect');
+        if (!selected) q.classList.add("incorrect");
         else if (selected === correct) {
           score++;
-          q.classList.add('correct');
-        } else {
-          q.classList.add('incorrect');
-        }
+          q.classList.add("correct");
+        } else q.classList.add("incorrect");
 
-        q.querySelectorAll('label').forEach(lbl => {
-          lbl.style.fontWeight = '';
-          if (lbl.querySelector('input').value === correct)
-            lbl.style.fontWeight = '700';
+        q.querySelectorAll("label").forEach(lbl => {
+          const input = lbl.querySelector("input");
+          lbl.style.fontWeight = input.value === correct ? "700" : "";
         });
       });
 
-      resultArea.innerHTML = '';
-      const div = document.createElement('div');
-      div.className = 'result';
-
-      const percent = Math.round((score/total)*100);
-      div.textContent = `Résultat : ${score} / ${total} — ${percent}%`;
-      div.classList.add(percent >= 70 ? 'correct' : 'incorrect');
-      resultArea.appendChild(div);
-
+      const percent = Math.round((score / total) * 100);
+      resultArea.innerHTML =
+        `<div class="result ${percent>=70 ? "correct":"incorrect"}">
+            Résultat : ${score} / ${total} — ${percent}%
+        </div>`;
       feedback.textContent = percent >= 70 ? "Bien joué !" : "Réessayez.";
     }
 
-    checkBtn.addEventListener('click', grade);
+    checkBtn.addEventListener("click", grade);
 
-    resetBtn.addEventListener('click', () => {
+    resetBtn.addEventListener("click", () => {
       quizForm.reset();
-      resultArea.innerHTML = '';
-      feedback.textContent = '';
-      document.querySelectorAll('.question').forEach(q => {
-        q.classList.remove('correct','incorrect');
-        q.querySelectorAll('label').forEach(lbl => lbl.style.fontWeight = '');
+      resultArea.innerHTML = "";
+      feedback.textContent = "";
+      document.querySelectorAll(".question").forEach(q => {
+        q.classList.remove("correct", "incorrect");
+        q.querySelectorAll("label").forEach(lbl => lbl.style.fontWeight = "");
       });
     });
   </script>
