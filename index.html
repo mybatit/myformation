@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Quiz dynamique</title>
+
+  <style>
+    :root{--bg:#f6f7fb;--card:#fff;--accent:#2b6df6;--ok:#16a34a;--bad:#ef4444}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; background:var(--bg); color:#111; margin:0; padding:24px;}
+    .container{max-width:820px;margin:0 auto}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .card{background:var(--card);border-radius:12px;padding:20px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+    .question{margin-bottom:14px;padding:12px;border-radius:8px}
+    .q-title{font-weight:600;margin-bottom:8px}
+    label{display:block;cursor:pointer;padding:6px;border-radius:6px}
+    input[type=radio]{margin-right:10px}
+    .controls{display:flex;gap:10px;align-items:center;margin-top:16px}
+    button{background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:8px;cursor:pointer}
+    button.secondary{background:#e6eefc;color:var(--accent)}
+    .result{margin-top:16px;padding:12px;border-radius:8px;font-weight:700}
+    .correct{background:rgba(22,163,74,0.12);color:var(--ok)}
+    .incorrect{background:rgba(239,68,68,0.08);color:var(--bad)}
+    .small{font-size:13px;color:#555}
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Quiz dynamique</h1>
+      <div class="small">Choisissez une réponse par question puis cliquez sur <strong>Vérifier</strong>.</div>
+    </header>
+
+    <main class="card">
+      <form id="quizForm"></form>
+
+      <div class="controls">
+        <button type="button" id="checkBtn">Vérifier</button>
+        <button type="button" id="resetBtn" class="secondary">Réinitialiser</button>
+        <div id="feedback" style="margin-left:auto" class="small"></div>
+      </div>
+
+      <div id="resultArea"></div>
+    </main>
+
+    <p class="small" style="margin-top:12px">
+      Pour modifier les questions, éditez simplement le fichier JSON.
+    </p>
+
+    <textarea id="jsonInput" placeholder="Collez ici votre JSON..." style="width:100%;height:180px;margin-top:20px;padding:10px;border-radius:8px;border:1px solid #ccc;font-family:monospace;font-size:14px"></textarea>
+    <button id="loadJsonBtn" style="margin-top:10px">Charger le JSON</button>
+
+  </div>
+
+  <script>
+    const quizForm = document.getElementById('quizForm');
+    const checkBtn = document.getElementById('checkBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const jsonInput = document.getElementById('jsonInput');
+    const loadJsonBtn = document.getElementById('loadJsonBtn');
+    const feedback = document.getElementById('feedback');
+    const resultArea = document.getElementById('resultArea');
+
+    // --------- LOAD JSON AND RENDER QUIZ ----------
+    loadJsonBtn.addEventListener('click', () => {
+      let data;
+      try {
+        data = JSON.parse(jsonInput.value);
+      } catch (e) {
+        alert('JSON invalide');
+        return;
+      }
+
+      quizForm.innerHTML = '';
+      resultArea.innerHTML = '';
+      feedback.textContent = '';
+
+      data.questions.forEach((q, idx) => {
+        const div = document.createElement('div');
+        div.className = 'question';
+        div.dataset.answer = q.answer;
+
+        div.innerHTML = `
+          <div class="q-title">${idx+1}) ${q.question}</div>
+          ${Object.entries(q.options).map(([key, value]) =>
+            `<label><input type="radio" name="q${idx+1}" value="${key}"> ${value}</label>`
+          ).join("")}
+        `;
+
+        quizForm.appendChild(div);
+      });
+    });
+
+    // --------- GRADE QUIZ ----------
+    function grade() {
+      const questions = Array.from(document.querySelectorAll('.question'));
+      let score = 0;
+      let total = questions.length;
+
+      questions.forEach((q, idx) => {
+        const correct = q.dataset.answer;
+        const name = 'q' + (idx+1);
+        const selected = quizForm[name]?.value || null;
+
+        q.classList.remove('correct','incorrect');
+
+        if (!selected) q.classList.add('incorrect');
+        else if (selected === correct) {
+          score++;
+          q.classList.add('correct');
+        } else {
+          q.classList.add('incorrect');
+        }
+
+        q.querySelectorAll('label').forEach(lbl => {
+          lbl.style.fontWeight = '';
+          if (lbl.querySelector('input').value === correct)
+            lbl.style.fontWeight = '700';
+        });
+      });
+
+      resultArea.innerHTML = '';
+      const div = document.createElement('div');
+      div.className = 'result';
+
+      const percent = Math.round((score/total)*100);
+      div.textContent = `Résultat : ${score} / ${total} — ${percent}%`;
+      div.classList.add(percent >= 70 ? 'correct' : 'incorrect');
+      resultArea.appendChild(div);
+
+      feedback.textContent = percent >= 70 ? "Bien joué !" : "Réessayez.";
+    }
+
+    checkBtn.addEventListener('click', grade);
+
+    resetBtn.addEventListener('click', () => {
+      quizForm.reset();
+      resultArea.innerHTML = '';
+      feedback.textContent = '';
+      document.querySelectorAll('.question').forEach(q => {
+        q.classList.remove('correct','incorrect');
+        q.querySelectorAll('label').forEach(lbl => lbl.style.fontWeight = '');
+      });
+    });
+  </script>
+
+</body>
+</html>
